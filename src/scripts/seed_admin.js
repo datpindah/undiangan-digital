@@ -11,7 +11,7 @@ const seedAdmin = async () => {
       
       const defaultName = 'Admin';
       const defaultEmail = 'admin@example.com';
-      const defaultPassword = 'admin'; // Simple default password
+      const defaultPassword = 'Admin123!'; // Default password matches user preference
       
       const hashedPassword = await bcrypt.hash(defaultPassword, 10);
       
