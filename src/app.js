@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { initDb } = require('./config/database');
+const seedAdmin = require('./scripts/seed_admin');
 
 const authRoutes = require('./routes/authRoutes');
 const invitationRoutes = require('./routes/invitationRoutes');
@@ -15,7 +16,6 @@ const PORT = process.env.PORT || 3000;
 
 // Initialize Database
 initDb();
-seedAdmin();
 
 // Middleware
 app.use(cors());
