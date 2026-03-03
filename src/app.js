@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 // Initialize Database
 initDb();
+seedAdmin();
 
 // Middleware
 app.use(cors());
@@ -41,6 +42,8 @@ app.get(['/', '/:slug'], (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+seedAdmin().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
