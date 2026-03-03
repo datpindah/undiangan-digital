@@ -33,6 +33,8 @@ const uploadGroomPhotoBtn = document.getElementById('uploadGroomPhotoBtn')
 const groomPhotoInput = document.getElementById('groomPhotoInput')
 const uploadBridePhotoBtn = document.getElementById('uploadBridePhotoBtn')
 const bridePhotoInput = document.getElementById('bridePhotoInput')
+const uploadMusicBtn = document.getElementById('uploadMusicBtn')
+const musicInput = document.getElementById('musicInput')
 
 function setToken(t) {
   token = t
@@ -190,6 +192,32 @@ function fillEditForm(inv) {
   editInvitationForm.querySelector('input[name="gift_account_number"]').value = inv.gift_account_number || ''
   editInvitationForm.querySelector('input[name="gift_account_name"]').value = inv.gift_account_name || ''
   editInvitationForm.querySelector('input[name="maps_url"]').value = inv.maps_url || ''
+
+  // Current Files
+  const groomEl = document.getElementById('currentGroomPhoto');
+  const brideEl = document.getElementById('currentBridePhoto');
+  const musicEl = document.getElementById('currentMusic');
+
+  if (inv.groom_image) {
+    groomEl.classList.remove('hidden');
+    groomEl.querySelector('a').href = inv.groom_image;
+  } else {
+    groomEl.classList.add('hidden');
+  }
+
+  if (inv.bride_image) {
+    brideEl.classList.remove('hidden');
+    brideEl.querySelector('a').href = inv.bride_image;
+  } else {
+    brideEl.classList.add('hidden');
+  }
+
+  if (inv.music_url) {
+    musicEl.classList.remove('hidden');
+    musicEl.querySelector('a').href = inv.music_url;
+  } else {
+    musicEl.classList.add('hidden');
+  }
 }
 
 uploadBulkGuestBtn.addEventListener('click', async () => {
@@ -254,6 +282,31 @@ async function uploadCouplePhoto(role, inputId) {
 
 uploadGroomPhotoBtn.addEventListener('click', () => uploadCouplePhoto('groom', 'groomPhotoInput'))
 uploadBridePhotoBtn.addEventListener('click', () => uploadCouplePhoto('bride', 'bridePhotoInput'))
+
+uploadMusicBtn.addEventListener('click', async () => {
+  const invId = editInvitationSelect.value
+  const file = musicInput.files[0]
+  if (!invId) return alert('Pilih undangan terlebih dahulu')
+  if (!file) return alert('Pilih file musik terlebih dahulu')
+  const fd = new FormData()
+  fd.append('music', file)
+  try {
+    const res = await fetch(`/api/invitations/${invId}/music`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd
+    })
+    const data = await res.json()
+    if (res.ok) {
+      alert('Musik berhasil diupload')
+      musicInput.value = ''
+    } else {
+      alert(data.message || 'Gagal upload musik')
+    }
+  } catch (e) {
+    alert('Error upload musik')
+  }
+})
 
 editInvitationForm.addEventListener('submit', async (e) => {
   e.preventDefault()

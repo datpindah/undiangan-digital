@@ -23,6 +23,9 @@
                     },
                     backgroundImage: {
                         'floral-pattern': "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%234A6FA5\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
                     }
                 }
             }
@@ -65,10 +68,14 @@
 </head>
 <body class="font-sans text-gray-700 bg-slate-50">
 
-    <!-- Audio (Optional, not requested but common) -->
-    <!-- <audio id="bg-music" loop>
-        <source src="music.mp3" type="audio/mp3">
-    </audio> -->
+    <!-- Audio Control -->
+    <div id="audio-control" class="fixed bottom-4 right-4 z-50 hidden">
+        <button id="musicBtn" class="bg-white/80 p-3 rounded-full shadow-lg text-primary hover:bg-white transition-all animate-spin-slow">
+            <!-- Icon Music -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+        </button>
+    </div>
+    <audio id="bg-music" loop></audio>
 
     <!-- 1. Cover Section -->
     <section id="cover" class="fixed inset-0 z-50 flex flex-col items-center justify-center min-h-screen text-center bg-white bg-floral-pattern transition-transform duration-1000 ease-in-out">

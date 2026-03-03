@@ -3,7 +3,10 @@ const path = require('path');
 const fs = require('fs');
 
 // Ensure uploads directory exists
-const uploadDir = path.resolve(__dirname, '../../uploads');
+const uploadDir = process.env.DATA_DIR 
+  ? path.join(process.env.DATA_DIR, 'uploads')
+  : path.resolve(__dirname, '../../uploads');
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -40,6 +43,17 @@ const fileFilterDocument = (req, file, cb) => {
   cb(new Error('Only Excel files are allowed'));
 };
 
+const fileFilterAudio = (req, file, cb) => {
+  const filetypes = /mp3|wav|mpeg/;
+  const mimetype = filetypes.test(file.mimetype);
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  }
+  cb(new Error('Only audio files are allowed'));
+};
+
 const uploadImage = multer({ 
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -52,8 +66,13 @@ const uploadDocument = multer({
   fileFilter: fileFilterDocument
 });
 
-module.exports = { upload: uploadImage, uploadDocument }; // Exporting 'upload' as default image uploader for backward compatibility if needed, but better to be explicit.
-// Wait, previous code exported 'upload' directly. I should maintain compatibility.
+const uploadAudio = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: fileFilterAudio
+});
+
 module.exports = uploadImage;
 module.exports.uploadImage = uploadImage;
 module.exports.uploadDocument = uploadDocument;
+module.exports.uploadAudio = uploadAudio;

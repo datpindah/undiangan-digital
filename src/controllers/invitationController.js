@@ -129,7 +129,10 @@ const updateCouplePhoto = (req, res) => {
     if (!inv) return res.status(404).json({ message: 'Undangan tidak ditemukan' });
     if (inv.user_id !== user_id) return res.status(403).json({ message: 'Tidak berhak' });
 
-    const column = role === 'groom' ? 'groom_image' : 'bride_image';
+    let column = '';
+    if (role === 'groom') column = 'groom_image';
+    else if (role === 'bride') column = 'bride_image';
+    
     const filePath = `/uploads/${file.filename}`;
     
     db.prepare(`UPDATE invitations SET ${column} = ? WHERE id = ?`).run(filePath, id);
@@ -141,7 +144,32 @@ const updateCouplePhoto = (req, res) => {
   }
 };
 
-module.exports = { createInvitation, getInvitationBySlug, updateInvitation, getMyInvitations, updateCouplePhoto };
+const updateMusic = (req, res) => {
+  const { id } = req.params;
+  const user_id = req.user.id;
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ message: 'File music wajib diisi' });
+  }
+
+  try {
+    const inv = db.prepare('SELECT id, user_id FROM invitations WHERE id = ?').get(id);
+    if (!inv) return res.status(404).json({ message: 'Undangan tidak ditemukan' });
+    if (inv.user_id !== user_id) return res.status(403).json({ message: 'Tidak berhak' });
+
+    const filePath = `/uploads/${file.filename}`;
+    
+    db.prepare('UPDATE invitations SET music_url = ? WHERE id = ?').run(filePath, id);
+    
+    res.json({ message: 'Musik berhasil diupdate', path: filePath });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { createInvitation, getInvitationBySlug, updateInvitation, getMyInvitations, updateCouplePhoto, updateMusic };
 const deleteInvitation = (req, res) => {
   const { id } = req.params;
   const user_id = req.user.id;
@@ -156,7 +184,10 @@ const deleteInvitation = (req, res) => {
     for (const g of gallery) files.push(g.image_path);
     for (const p of files) {
       const fname = String(p || '').replace('/uploads/', '');
-      const fpath = path.resolve(__dirname, '../uploads', fname);
+      const uploadDir = process.env.DATA_DIR 
+        ? path.join(process.env.DATA_DIR, 'uploads')
+        : path.resolve(__dirname, '../../uploads');
+      const fpath = path.join(uploadDir, fname);
       try {
         if (fs.existsSync(fpath)) fs.unlinkSync(fpath);
       } catch {}

@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS invitations (
   groom_parents_text TEXT,
   bride_parents_text TEXT,
   maps_url TEXT,
+  groom_image TEXT,
+  bride_image TEXT,
+  music_url TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -149,13 +149,26 @@
                              <div class="md:col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Foto Pria</label>
+                                    <div id="currentGroomPhoto" class="mb-2 text-xs text-gray-500 hidden">Current: <a href="#" target="_blank" class="text-primary underline">View</a></div>
                                     <input type="file" id="groomPhotoInput" accept="image/*" class="text-sm">
                                     <button type="button" id="uploadGroomPhotoBtn" class="mt-2 text-xs bg-gray-200 px-2 py-1 rounded">Upload Foto Pria</button>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Foto Wanita</label>
+                                    <div id="currentBridePhoto" class="mb-2 text-xs text-gray-500 hidden">Current: <a href="#" target="_blank" class="text-primary underline">View</a></div>
                                     <input type="file" id="bridePhotoInput" accept="image/*" class="text-sm">
                                     <button type="button" id="uploadBridePhotoBtn" class="mt-2 text-xs bg-gray-200 px-2 py-1 rounded">Upload Foto Wanita</button>
+                                </div>
+                            </div>
+
+                            <!-- Music Upload (New) -->
+                            <div class="md:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 mt-2">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Musik Latar</label>
+                                    <div id="currentMusic" class="mb-2 text-xs text-gray-500 hidden">Current: <a href="#" target="_blank" class="text-primary underline">Play</a></div>
+                                    <input type="file" id="musicInput" accept="audio/*" class="text-sm">
+                                    <button type="button" id="uploadMusicBtn" class="mt-2 text-xs bg-gray-200 px-2 py-1 rounded">Upload Musik</button>
+                                    <p class="text-xs text-gray-400 mt-1">Format: MP3, WAV</p>
                                 </div>
                             </div>
 

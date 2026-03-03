@@ -139,6 +139,13 @@ function populateUI(data) {
         `).join('');
     }
 
+    // Setup Music
+    const audio = document.getElementById('bg-music');
+    if (audio && data.music_url) {
+        audio.src = data.music_url;
+        audio.load();
+    }
+
     // Store invitation ID for RSVP
     document.getElementById('rsvp-form').dataset.invitationId = data.id;
 }
@@ -147,6 +154,9 @@ function populateUI(data) {
 function openInvitation() {
     const cover = document.getElementById('cover');
     const main = document.getElementById('main-content');
+    const audio = document.getElementById('bg-music');
+    const audioControl = document.getElementById('audio-control');
+    const musicBtn = document.getElementById('musicBtn');
     
     // Slide up cover
     cover.style.transform = 'translateY(-100%)';
@@ -155,24 +165,52 @@ function openInvitation() {
     setTimeout(() => {
         main.classList.remove('opacity-0');
         // Play music if exists
-        // const audio = document.getElementById('bg-music');
-        // if(audio) audio.play();
+        if(audio && audio.src) {
+            audio.play().catch(e => console.log('Autoplay prevented', e));
+            if(audioControl) {
+                audioControl.classList.remove('hidden');
+                // Check if playing to add animation
+                if(!audio.paused && musicBtn) {
+                    musicBtn.classList.add('animate-spin-slow');
+                    musicBtn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"></path></svg>`; // Pause icon
+                }
+            }
+        }
     }, 500);
 }
 
 // 5. Copy to Clipboard
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        const toast = document.getElementById('toast');
-        toast.classList.remove('opacity-0');
-        setTimeout(() => {
-            toast.classList.add('opacity-0');
-        }, 2000);
+        // Assume toast exists or create simple alert fallback
+        // const toast = document.getElementById('toast');
+        // if(toast) ...
+        alert('Nomor rekening disalin!');
     });
 }
 
 // 6. Setup Listeners
 function setupEventListeners() {
+    // Music Control
+    const musicBtn = document.getElementById('musicBtn');
+    const audio = document.getElementById('bg-music');
+    const musicIcon = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>`;
+    const pauseIcon = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"></path></svg>`;
+
+    if (musicBtn && audio) {
+        musicBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                musicBtn.classList.add('animate-spin-slow');
+                musicBtn.innerHTML = pauseIcon;
+            } else {
+                audio.pause();
+                musicBtn.classList.remove('animate-spin-slow');
+                musicBtn.innerHTML = musicIcon;
+            }
+        });
+    }
+
     // RSVP Form
     const rsvpForm = document.getElementById('rsvp-form');
     rsvpForm.addEventListener('submit', async (e) => {

@@ -70,7 +70,13 @@ const deleteImage = (req, res) => {
     }
 
     // Delete file
-    const filePath = path.resolve(__dirname, '../../', image.image_path.substring(1)); // Remove leading /
+    const filename = path.basename(image.image_path);
+    const uploadDir = process.env.DATA_DIR 
+      ? path.join(process.env.DATA_DIR, 'uploads')
+      : path.resolve(__dirname, '../../uploads');
+    
+    const filePath = path.join(uploadDir, filename);
+    
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
